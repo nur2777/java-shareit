@@ -1,7 +1,6 @@
 package ru.practicum.shareit.item.controller;
 
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.item.dto.ItemDTO;
@@ -10,7 +9,6 @@ import ru.practicum.shareit.item.service.ItemServiceImpl;
 import java.util.Collection;
 
 @RestController
-@Slf4j
 @RequestMapping("/items")
 public class ItemControllerImpl implements ItemController {
 
