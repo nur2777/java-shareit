@@ -6,7 +6,7 @@ import ru.practicum.shareit.user.dto.UserDTO;
 import java.util.Collection;
 
 /**
- * Интерфейс реализует основных CRUD-операций
+ * Интерфейс реализует логику CRUD-операций для сущности Пользователь
  */
 public interface UserService {
 

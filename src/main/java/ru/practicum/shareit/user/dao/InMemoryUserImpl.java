@@ -12,7 +12,7 @@ import java.util.*;
  */
 @Component("InMemoryUserImpl")
 @Slf4j
-public class InMemoryUserImpl implements UserDAO{
+public class InMemoryUserImpl implements UserDAO {
 
     private final Map<Long, User> users = new HashMap<>();
 
@@ -67,7 +67,11 @@ public class InMemoryUserImpl implements UserDAO{
 
     @Override
     public User getUserById(Long userId) {
-        return users.get(userId);
+        if (users.containsKey(userId)) {
+            return users.get(userId);
+        } else {
+            throw new NotFoundException("Не найден пользователь с идентификатором " + userId);
+        }
     }
 
     @Override

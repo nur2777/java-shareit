@@ -29,5 +29,5 @@ public class Item {
      * Доступность вещи
      * True - доступна, False - не доступна
      */
-    private boolean available;
+    private Boolean available;
 }

@@ -12,7 +12,7 @@ public class UserMap {
                 .build();
     }
 
-    public static UserDTO userToUserDTO (User user) {
+    public static UserDTO userToUserDTO(User user) {
         return UserDTO.builder()
                 .id(user.getUserId())
                 .name(user.getName())

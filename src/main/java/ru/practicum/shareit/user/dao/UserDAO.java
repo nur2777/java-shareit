@@ -4,6 +4,9 @@ import ru.practicum.shareit.user.model.User;
 
 import java.util.Collection;
 
+/**
+ * Интерфейс реализует хранение данных для сущности Пользователь
+ */
 public interface UserDAO {
 
     /** Создание пользователя

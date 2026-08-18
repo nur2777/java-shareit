@@ -2,9 +2,7 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.constants.Qualifiers;
 import ru.practicum.shareit.exception.ClientErrorException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dao.UserDAO;
@@ -20,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Qualifier(Qualifiers.USER)
     private final UserDAO userDAO;
 
     @Override
