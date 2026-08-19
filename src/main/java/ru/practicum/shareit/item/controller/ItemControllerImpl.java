@@ -12,6 +12,7 @@ import java.util.Collection;
 @RequestMapping("/items")
 public class ItemControllerImpl implements ItemController {
 
+    public static final String SHARER_USER_ID = "X-Sharer-User-Id";
     private final ItemServiceImpl itemService;
 
     @Autowired
@@ -22,7 +23,7 @@ public class ItemControllerImpl implements ItemController {
     @Override
     @PostMapping
     public ItemDTO add(@Valid @RequestBody ItemDTO newItem,
-                       @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+                       @RequestHeader(SHARER_USER_ID) Long ownerId) {
         return itemService.createItem(newItem,ownerId);
     }
 
@@ -30,7 +31,7 @@ public class ItemControllerImpl implements ItemController {
     @PatchMapping("/{itemId}")
     public ItemDTO update(@PathVariable Long itemId,
                           @RequestBody ItemDTO itemDTO,
-                          @RequestHeader("X-Sharer-User-Id") Long ownerId) {
+                          @RequestHeader(SHARER_USER_ID) Long ownerId) {
         return itemService.updateItem(itemId,itemDTO,ownerId);
     }
 
@@ -42,7 +43,7 @@ public class ItemControllerImpl implements ItemController {
 
     @Override
     @GetMapping
-    public Collection<ItemDTO> getAllOwnerItems(@RequestHeader("X-Sharer-User-Id") Long ownerId) {
+    public Collection<ItemDTO> getAllOwnerItems(@RequestHeader(SHARER_USER_ID) Long ownerId) {
         return itemService.getAllOwnerItems(ownerId);
     }
 

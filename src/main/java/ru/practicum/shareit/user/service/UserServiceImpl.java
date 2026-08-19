@@ -35,22 +35,6 @@ public class UserServiceImpl implements UserService {
         return UserMap.userToUserDTO(userDAO.createUser(newUser));
     }
 
-    /** Проверка на дубликат. Существования пользователя с таким же email
-     * @param email - почта которую надо проверить
-     * @return true - если пользователь с такой почтой уже есть, иначе false
-     */
-    private boolean emailIsDuplicate(String email) {
-        List<User> sameUsers = userDAO.getUsers().stream()
-                .filter(user -> user.getEmail().equals(email))
-                .toList();
-        if (!sameUsers.isEmpty()) {
-            log.info("Дубликат");
-            return true;
-        } else {
-            return false;
-        }
-    }
-
     @Override
     public UserDTO updateUser(UserDTO userDTO, Long userId) {
         User updatedUser = UserMap.userDTOToUser(userDTO);
@@ -78,54 +62,20 @@ public class UserServiceImpl implements UserService {
                 .map(UserMap::userToUserDTO)
                 .toList();
     }
-/*
-    @Override
-    public User addNewFriend(Long userId, Long newFriendId) {
-        log.trace("Проверяем существование и получаем объект пользователя");
-        User user = userStorage.getUser(userId);
-        log.trace("Проверяем существование и получаем объект друга");
-        User friend = userStorage.getUser(newFriendId);
-        if (userStorage.addNewFriend(user,newFriendId)) {
-            log.trace("Новый друг к пользователю успешно добавлен");
-        } else {
-            log.warn("Друг с id {} уже является другом пользователю.", newFriendId);
-        }
-        return user;
-    }
 
-    @Override
-    public User unfriend(Long userId, Long friendId) {
-        log.trace("Проверяем существование и получаем объект пользователя");
-        User user = userStorage.getUser(userId);
-        log.trace("Проверяем существование и получаем объект друга");
-        User friend = userStorage.getUser(friendId);
-        if (userStorage.unfriend(user,friendId)) {
-            log.trace("Друг удален из списка друзей пользователя успешно");
-        } else {
-            log.warn("Друг с id {} не является другом пользователю.", friendId);
-        }
-        return user;
-    }
-
-    @Override
-    public Collection<User> getFriends(Long userId) {
-        log.trace("Проверяем существование и получаем объект пользователя");
-        User user = userStorage.getUser(userId);
-        return user.getFriends().stream()
-                .map(id -> userStorage.getUser(id))
+    /** Проверка на дубликат. Существования пользователя с таким же email
+     * @param email - почта которую надо проверить
+     * @return true - если пользователь с такой почтой уже есть, иначе false
+     */
+    private boolean emailIsDuplicate(String email) {
+        List<User> sameUsers = userDAO.getUsers().stream()
+                .filter(user -> user.getEmail().equals(email))
                 .toList();
+        if (!sameUsers.isEmpty()) {
+            log.info("Дубликат");
+            return true;
+        } else {
+            return false;
+        }
     }
-
-    @Override
-    public Collection<User> getCommonFriends(Long userId, Long otherUserId) {
-        log.trace("Проверяем существование и получаем объект пользователя");
-        User user = userStorage.getUser(userId);
-        log.trace("Проверяем существование и получаем объект друга");
-        User otherUser = userStorage.getUser(otherUserId);
-        return user.getFriends().stream()
-                .filter(otherUser.getFriends()::contains)
-                .map(id -> userStorage.getUser(id))
-                .toList();
-    }*/
-
 }
