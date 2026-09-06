@@ -23,6 +23,7 @@ public interface ItemController {
      * @param ownerId владелец обновляемой вещи
      * @return объект обновленного пользователя
      */
+    @SuppressWarnings("unused")
     ItemDTO update(Long itemId, ItemDTO itemDTO, Long ownerId);
 
     /**
@@ -30,6 +31,7 @@ public interface ItemController {
      * @param id идентификатор вещи
      * @return объект
      */
+    @SuppressWarnings("unused")
     ItemDTO getItem(Long id);
 
     /**
@@ -42,5 +44,5 @@ public interface ItemController {
      * Эндпоинт поиска вещи по названию и описанию
      * @return список найденных вещей
      */
-    Collection<ItemDTO> findByNameDescription(String text);
+    Collection<ItemDTO> findByNameDescription(String text, Long ownerId);
 }

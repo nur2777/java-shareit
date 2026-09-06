@@ -6,15 +6,19 @@ import ru.practicum.shareit.user.model.User;
 public class UserMap {
 
     public static User userDTOToUser(UserDTO userDTO) {
-        return User.builder()
-                .name(userDTO.getName())
-                .email(userDTO.getEmail())
-                .build();
+        User user = new User();
+        if (userDTO.getName() != null) {
+            user.setName(userDTO.getName());
+        }
+        if (userDTO.getEmail() != null) {
+            user.setEmail(userDTO.getEmail());
+        }
+        return user;
     }
 
     public static UserDTO userToUserDTO(User user) {
         return UserDTO.builder()
-                .id(user.getUserId())
+                .id(user.getId())
                 .name(user.getName())
                 .email(user.getEmail())
                 .build();

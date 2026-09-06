@@ -6,11 +6,17 @@ import ru.practicum.shareit.item.model.Item;
 public class ItemMap {
 
     public static Item itemDTOToItem(ItemDTO itemDTO) {
-        return Item.builder()
-                .name(itemDTO.getName())
-                .description(itemDTO.getDescription())
-                .available(itemDTO.getAvailable())
-                .build();
+        Item item = new Item();
+        if (itemDTO.getName() != null) {
+            item.setName(itemDTO.getName());
+        }
+        if (itemDTO.getDescription() != null) {
+            item.setDescription(itemDTO.getDescription());
+        }
+        if (itemDTO.getAvailable() != null) {
+            item.setAvailable(itemDTO.getAvailable());
+        }
+        return item;
     }
 
     public static ItemDTO itemToItemDTO(Item item) {

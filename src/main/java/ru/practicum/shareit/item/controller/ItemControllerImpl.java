@@ -50,7 +50,8 @@ public class ItemControllerImpl implements ItemController {
     @Override
     @GetMapping("/search")
     public Collection<ItemDTO> findByNameDescription(
-            @RequestParam String text) {
+            @RequestParam String text,
+            @RequestHeader(SHARER_USER_ID) Long ownerId) {
         return itemService.findByNameDescription(text);
     }
 }

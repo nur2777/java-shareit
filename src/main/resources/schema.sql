@@ -24,3 +24,7 @@ COMMENT ON COLUMN items.owner_id IS 'Владелец вещи, ссылка н�
 COMMENT ON COLUMN items.name IS 'Название вещи';
 COMMENT ON COLUMN items.description IS 'Описание вещи';
 COMMENT ON COLUMN items.available IS 'Доступность, True - доступна, False - не доступна';
+
+--=================== очищение данных
+DELETE FROM items;
+DELETE FROM users;

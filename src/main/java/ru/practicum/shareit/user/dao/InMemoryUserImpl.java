@@ -31,16 +31,16 @@ public class InMemoryUserImpl implements UserDAO {
 
     @Override
     public User createUser(User newUser) {
-        newUser.setUserId(getNextUserId());
-        users.put(newUser.getUserId(),newUser);
-        log.info("Пользователь {} успешно добавлен c идентификатором {}.", newUser.getName(),newUser.getUserId());
+        newUser.setId(getNextUserId());
+        users.put(newUser.getId(),newUser);
+        log.info("Пользователь {} успешно добавлен c идентификатором {}.", newUser.getName(),newUser.getId());
         return newUser;
     }
 
     @Override
     public User updateUser(User updatedUser) {
-        if (users.containsKey(updatedUser.getUserId())) {
-            User user  = users.get(updatedUser.getUserId());
+        if (users.containsKey(updatedUser.getId())) {
+            User user  = users.get(updatedUser.getId());
             if (updatedUser.getName() != null && !updatedUser.getName().isEmpty()) {
                 user.setName(updatedUser.getName());
                 log.info("Успешно обновлено имя пользователя на {}.", updatedUser.getName());
@@ -51,7 +51,7 @@ public class InMemoryUserImpl implements UserDAO {
             }
             return user;
         } else {
-            throw new NotFoundException("Не найден пользователь с идентификатором " + updatedUser.getUserId());
+            throw new NotFoundException("Не найден пользователь с идентификатором " + updatedUser.getId());
         }
     }
 
