@@ -14,7 +14,7 @@ public interface ItemController {
      * @param ownerId владелец новой вещи
      * @return объект созданной вещи
      */
-    ItemDTO add(ItemDTO newItem,Long ownerId);
+    ItemDTO add( ItemDTO newItem, Long ownerId);
 
     /**
      * Эндпоинт на обновление данных о вещи

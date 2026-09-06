@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.ClientErrorException;
+import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.dto.UserDTO;
@@ -30,7 +31,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO getUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Пользователь с id " + userId + " не найден "));
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден "));
         return UserMap.userToUserDTO(user);
     }
 
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserDTO updateUser(UserDTO userDTO, Long userId) {
         User updatedUser = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Пользователь с id " + userId + " не найден "));;
+                .orElseThrow(() -> new NotFoundException("Пользователь с id " + userId + " не найден "));;
         if (userDTO.getName() != null) {
             updatedUser.setName(userDTO.getName());
         }
