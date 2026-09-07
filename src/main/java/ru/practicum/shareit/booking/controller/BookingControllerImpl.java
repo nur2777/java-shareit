@@ -2,11 +2,15 @@ package ru.practicum.shareit.booking.controller;
 
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.booking.StateEnum;
 import ru.practicum.shareit.booking.dto.BookingResponseDTO;
 import ru.practicum.shareit.booking.dto.BookingRequestDTO;
 import ru.practicum.shareit.booking.service.BookingService;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -27,7 +31,6 @@ public class BookingControllerImpl implements BookingController {
         return bookingService.createNewBooking(newBookingDto,renterId);
     }
 
-
     @Override
     @PatchMapping("/{bookingId}")
     public BookingResponseDTO confirmReject(@Valid @PathVariable Long bookingId,
@@ -36,11 +39,22 @@ public class BookingControllerImpl implements BookingController {
         return bookingService.confirmReject(bookingId, itemOwnerId, approved);
     }
 
-
     @Override
     @GetMapping("/{bookingId}")
-    public BookingResponseDTO getBooking(@Valid @PathVariable Long bookingId,
+    public BookingResponseDTO getBookingById(@Valid @PathVariable Long bookingId,
                                          @RequestHeader(SHARER_USER_ID) Long userId) {
-        return bookingService.getBooking(bookingId,userId);
+        return bookingService.getBookingById(bookingId,userId);
+    }
+
+    @Override
+    @GetMapping
+    public List<BookingResponseDTO> getAllBookingByUserId(@RequestHeader(SHARER_USER_ID) Long currentUserId,
+                                                          @RequestParam(defaultValue = "ALL") String state) {
+        try { // проверяем корректность параметра state
+            StateEnum stateEnum = StateEnum.valueOf(state.toUpperCase());
+            return bookingService.getAllBookingByUserId(currentUserId, stateEnum);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Неверное значение параметра state: " + state.toUpperCase());
+        }
     }
 }

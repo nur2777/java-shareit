@@ -1,7 +1,11 @@
 package ru.practicum.shareit.booking.controller;
 
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.shareit.booking.dto.BookingResponseDTO;
 import ru.practicum.shareit.booking.dto.BookingRequestDTO;
+
+import java.util.List;
 
 /**
  * Интерфейс контроллера для функционала бронирования
@@ -31,5 +35,14 @@ public interface BookingController {
      * @param userId идентификатор пользователя делающего запрос
      * @return объект бронирования
      */
-    BookingResponseDTO getBooking(Long bookingId, Long userId);
+    BookingResponseDTO getBookingById(Long bookingId, Long userId);
+
+    /**
+     * Эндпоинт получения списка всех бронирований текущего пользователя.
+     *
+     * @param currentUserId идентификатор текущего пользователя делающего запрос
+     * @param state статус бронирования
+     * @return объект бронирования
+     */
+    List<BookingResponseDTO> getAllBookingByUserId(Long currentUserId, String state);
 }

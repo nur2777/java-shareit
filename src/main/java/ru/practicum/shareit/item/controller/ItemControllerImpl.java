@@ -26,7 +26,6 @@ public class ItemControllerImpl implements ItemController {
     @PostMapping
     public ItemDTO add(@Valid @RequestBody ItemDTO itemDTO,
                        @RequestHeader(SHARER_USER_ID) Long ownerId) {
-        log.info("TEST ADD ownerId=");
         return itemService.createItem(itemDTO,ownerId);
     }
 

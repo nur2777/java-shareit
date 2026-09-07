@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.dto.UserDTO;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -45,10 +47,10 @@ public class BookingResponseDTO {
     /**
      * Вещь
      */
-    private Item item;
+    private ItemDTO item;
 
     /**
      * Пользователь арендатор
      */
-    private User booker;
+    private UserDTO booker;
 }

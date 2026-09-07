@@ -20,11 +20,11 @@ public class ItemMap {
     }
 
     public static ItemDTO itemToItemDTO(Item item) {
-        return ItemDTO.builder()
-                .id(item.getId())
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .build();
+        ItemDTO itemDTO = new ItemDTO();
+        itemDTO.setId(item.getId());
+        itemDTO.setName(item.getName());
+        itemDTO.setDescription(item.getDescription());
+        itemDTO.setAvailable(item.getAvailable());
+        return itemDTO;
     }
 }

@@ -4,12 +4,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * DTO-объект для вещи
  */
 @Data
-@Builder
+//@Builder
+@NoArgsConstructor
 public class ItemDTO {
     /**
      * Идентификатор вещи

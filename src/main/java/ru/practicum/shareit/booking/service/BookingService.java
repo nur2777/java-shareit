@@ -1,7 +1,10 @@
 package ru.practicum.shareit.booking.service;
 
+import ru.practicum.shareit.booking.StateEnum;
 import ru.practicum.shareit.booking.dto.BookingResponseDTO;
 import ru.practicum.shareit.booking.dto.BookingRequestDTO;
+
+import java.util.List;
 
 /**
  * Интерфейс реализует логику CRUD-операций для функционала бронирования
@@ -27,5 +30,14 @@ public interface BookingService {
      * @param userId идентификатор пользователя делающего запрос
      * @return объект брони
      */
-    BookingResponseDTO getBooking(Long bookingId, Long userId);
+    BookingResponseDTO getBookingById(Long bookingId, Long userId);
+
+    /**
+     * Метод получения списка всех бронирований текущего пользователя.
+     *
+     * @param currentUserId идентификатор текущего пользователя делающего запрос
+     * @param state статус бронирования
+     * @return список объектов бронирования текущего пользователя
+     */
+    List<BookingResponseDTO> getAllBookingByUserId(Long currentUserId, StateEnum state);
 }

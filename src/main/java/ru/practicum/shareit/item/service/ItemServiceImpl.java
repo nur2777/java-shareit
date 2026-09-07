@@ -99,7 +99,7 @@ public class ItemServiceImpl implements ItemService {
         if (text == null || text.isEmpty()) {
             return List.of();
         }
-        return  itemRepository.findByNameContainingIgnoreCaseAndDescriptionContainingIgnoreCase(text,text).stream()
+        return  itemRepository.findByNameDescription(text,text).stream()
                 .map(ItemMap::itemToItemDTO)
                 .toList();
     }
