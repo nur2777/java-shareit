@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.controller;
 
+import ru.practicum.shareit.item.dto.CommentsDTO;
 import ru.practicum.shareit.item.dto.ItemDTO;
 
 import java.util.Collection;
@@ -14,7 +15,7 @@ public interface ItemController {
      * @param ownerId владелец новой вещи
      * @return объект созданной вещи
      */
-    ItemDTO add( ItemDTO newItem, Long ownerId);
+    ItemDTO add(ItemDTO newItem, Long ownerId);
 
     /**
      * Эндпоинт на обновление данных о вещи
@@ -45,4 +46,13 @@ public interface ItemController {
      * @return список найденных вещей
      */
     Collection<ItemDTO> findByNameDescription(String text, Long ownerId);
+
+    /**
+     * Эндпоинт для создания отзыва о вещи
+     * @param itemId идентификатор обновляемой вещи
+     * @param comment отзыв
+     * @param authorId владелец отзыва
+     * @return объект созданного отзыва
+     */
+    CommentsDTO addCommentToItem(Long itemId, CommentsDTO comment, Long authorId);
 }

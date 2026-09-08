@@ -14,7 +14,7 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
      */
     List<Booking> findAllByUserId(Long userId);
 
-    /** Список всех завершенных и подтвержденных бронирований текущего пользователя
+    /** Список бронирований текущего пользователя по заданным параметрам
      * @param userId текущий пользователь
      * @param status  статус бронирования
      * @param bookingDateTime  дата и время бронирования

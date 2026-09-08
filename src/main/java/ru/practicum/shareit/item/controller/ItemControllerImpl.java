@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentsDTO;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
@@ -55,5 +56,13 @@ public class ItemControllerImpl implements ItemController {
             @RequestParam String text,
             @RequestHeader(SHARER_USER_ID) Long ownerId) {
         return itemService.findByNameDescription(text);
+    }
+
+    @Override
+    @PostMapping("/{itemId}/comment")
+    public CommentsDTO addCommentToItem(@PathVariable Long itemId,
+                                    @Valid @RequestBody CommentsDTO commentsDTO,
+                                    @RequestHeader(SHARER_USER_ID) Long authorId) {
+        return itemService.addCommentToItem(itemId,commentsDTO,authorId);
     }
 }
