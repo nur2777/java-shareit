@@ -33,7 +33,7 @@ public interface ItemService {
      * @param itemId идентификатор вещи
      * @return данные найденной вещи
      */
-    ItemDTO getItem(Long itemId);
+    ItemDTO getItem(Long itemId, Long ownerId);
 
     /** Метод просмотра владельцем списка всех его вещей
      * @param ownerId идентификатор владельца

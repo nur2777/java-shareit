@@ -24,7 +24,6 @@ public interface ItemController {
      * @param ownerId владелец обновляемой вещи
      * @return объект обновленного пользователя
      */
-    @SuppressWarnings("unused")
     ItemDTO update(Long itemId, ItemDTO itemDTO, Long ownerId);
 
     /**
@@ -32,8 +31,7 @@ public interface ItemController {
      * @param id идентификатор вещи
      * @return объект
      */
-    @SuppressWarnings("unused")
-    ItemDTO getItem(Long id);
+    ItemDTO getItem(Long id,Long ownerId);
 
     /**
      * Эндпоинт получения списка всех вещей заданного пользователя

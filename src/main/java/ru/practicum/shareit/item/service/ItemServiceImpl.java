@@ -22,9 +22,9 @@ import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -87,12 +87,26 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ItemDTO getItem(Long itemId) {
+    public ItemDTO getItem(Long itemId, Long ownerId) {
         if (itemId == null) {
             throw new ValidationException("При поиске вещи не указан идентификатор вещи");
         }
-        return ItemMap.itemToItemDTO(itemRepository.findById(itemId)
-                .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена!")));
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена!"));
+        ItemDTO itemDTO = ItemMap.itemToItemDTO(item);
+        //получаем все комментарии к вещи
+        List<Comment> comments = commentRepository.findByItemId(itemId);
+        if (!comments.isEmpty()) { //если комментарии есть, то добавляем их в ответ
+            itemDTO.setComments(comments.stream()
+                    .map(CommentMap::toCommentsDTO)
+                    .toList());
+        }
+        // только владелец может видеть даты последнего и следующего бронирования
+        if (item.getOwnerId().equals(ownerId)) {
+            itemDTO.setLastBooking(bookingRepository.findLastBookingDatetime(itemId));
+            itemDTO.setNextBooking(bookingRepository.findNextBookingDatetime(itemId));
+        }
+        return itemDTO;
     }
 
     @Override
@@ -100,9 +114,28 @@ public class ItemServiceImpl implements ItemService {
         if (ownerId == null) {
             throw new ValidationException("При поиске вещей пользователя не указан идентификатор владельца");
         }
-        return itemRepository.findByOwnerId(ownerId).stream()
-                .map(ItemMap::itemToItemDTO)
-                .toList();
+        // что бы избежать проблемы N+1 запросов
+        // выгружаем сначала список всех вещей (один запрос)
+        Map<Long, Item> itemMap = itemRepository.findByOwnerId(ownerId)
+                .stream()
+                .collect(Collectors.toMap(Item::getId, Function.identity()));
+        // выгружаем комментарии (ещё один запрос)
+        Map<Long, List<Comment>> commentMap = commentRepository.findByItemIdIn(itemMap.keySet()).stream()
+                .collect(Collectors.groupingBy(comment -> comment.getItem().getId()));
+
+        return itemMap.values()
+                .stream()
+                .map(item -> makeItemWithCommentsDto(item,
+                        commentMap.getOrDefault(item.getId(), Collections.emptyList())))
+                .collect(Collectors.toList());
+    }
+
+    private ItemDTO makeItemWithCommentsDto(Item item, List<Comment> comments) {
+        ItemDTO itemDTO = ItemMap.itemToItemDTO(item);
+        itemDTO.setComments(comments.stream()
+                .map(CommentMap::toCommentsDTO)
+                .toList());
+        return itemDTO;
     }
 
     @Override

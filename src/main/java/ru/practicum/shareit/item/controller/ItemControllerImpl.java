@@ -40,8 +40,9 @@ public class ItemControllerImpl implements ItemController {
 
     @Override
     @GetMapping("/{itemId}")
-    public ItemDTO getItem(@Valid @PathVariable Long itemId) {
-        return itemService.getItem(itemId);
+    public ItemDTO getItem(@Valid @PathVariable Long itemId,
+                           @RequestHeader(SHARER_USER_ID) Long ownerId) {
+        return itemService.getItem(itemId,ownerId);
     }
 
     @Override

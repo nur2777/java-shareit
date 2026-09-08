@@ -34,4 +34,28 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
             "order by b.bookingStart desc")
     List<Booking> findAllByUserIdAndState(Long userId, String status, String state, LocalDateTime bookingDateTime);
 
+    /** Дата и время последнего бронирования вещи
+     * @param itemId идентификатор вещи
+     * @return Дата и время последнего бронирования
+     */
+    @Query(value = "select MAX(b.booking_end_datetime)" +
+            "            from bookings as b " +
+            "               join items as i on b.item_id = i.id" +
+            "            where i.id = ?1 " +
+            "                  and b.status = 'APPROVED'" +
+            "                  and b.booking_end_datetime  < CURRENT_TIMESTAMP", nativeQuery = true)
+    LocalDateTime findLastBookingDatetime(Long itemId);
+
+    /** Дата и время следующего бронирования вещи
+     * @param itemId идентификатор вещи
+     * @return Дата и время следующего бронирования
+     */
+    @Query(value = "select MIN(b.booking_start_datetime)" +
+            "            from bookings as b " +
+            "               join items as i on b.item_id = i.id" +
+            "            where i.id = ?1 " +
+            "                  and b.status = 'APPROVED'" +
+            "                  and b.booking_start_datetime  > CURRENT_TIMESTAMP", nativeQuery = true)
+    LocalDateTime findNextBookingDatetime(Long itemId);
+
 }
