@@ -9,6 +9,8 @@ import ru.practicum.shareit.user.dto.UserDTO;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.shareit.constants.Constants.DATE_TIME_PATTERN;
+
 /**
  * DTO для бронирования
  */
@@ -28,13 +30,13 @@ public class BookingResponseDTO {
     /**
      * Дата и время начала брони
      */
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime start;
 
     /**
      * Дата и время окончания брони
      */
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime end;
 
     /**

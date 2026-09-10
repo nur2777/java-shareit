@@ -39,9 +39,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDTO createItem(ItemDTO itemDTO, Long ownerId) {
-        if (ownerId == null) {
-            throw new ValidationException("При создании вещи не указан его владелец");
-        }
+        idIsNullCheck(ownerId,"Идентификатор владельца");
         User user = userRepository.findById(ownerId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + ownerId + " не найден "));
         Item item = ItemMap.itemDTOToItem(itemDTO);
@@ -52,14 +50,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDTO updateItem(Long itemId, ItemDTO itemDTO,  Long ownerId) {
-        if (ownerId == null) {
-            throw new ValidationException("При обновлении вещи не указан его владелец");
-        }
+        idIsNullCheck(itemId,"Идентификатор владельца вещи");
         User user = userRepository.findById(ownerId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + ownerId + " не найден "));
-        if (itemId == null) {
-            throw new ValidationException("При обновлении вещи не указан идентификатор вещи");
-        }
+        idIsNullCheck(itemId,"Идентификатор вещи");
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена!"));
         if (!Objects.equals(ownerId,item.getOwnerId())) {
@@ -80,28 +74,22 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void deleteItem(Long itemId) {
-        if (itemId == null) {
-            throw new ValidationException("При удалении вещи не указан идентификатор вещи");
-        }
+        idIsNullCheck(itemId,"Идентификатор вещи");
         itemRepository.deleteById(itemId);
     }
 
     @Override
     public ItemDTO getItem(Long itemId, Long ownerId) {
-        if (itemId == null) {
-            throw new ValidationException("При поиске вещи не указан идентификатор вещи");
-        }
+        idIsNullCheck(itemId,"Идентификатор вещи");
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена!"));
         ItemDTO itemDTO = ItemMap.itemToItemDTO(item);
-        //получаем все комментарии к вещи
         List<Comment> comments = commentRepository.findByItemId(itemId);
-        if (!comments.isEmpty()) { //если комментарии есть, то добавляем их в ответ
+        if (!comments.isEmpty()) {
             itemDTO.setComments(comments.stream()
                     .map(CommentMap::toCommentsDTO)
                     .toList());
         }
-        // только владелец может видеть даты последнего и следующего бронирования
         if (item.getOwnerId().equals(ownerId)) {
             itemDTO.setLastBooking(bookingRepository.findLastBookingDatetime(itemId));
             itemDTO.setNextBooking(bookingRepository.findNextBookingDatetime(itemId));
@@ -111,18 +99,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDTO> getAllOwnerItems(Long ownerId) {
-        if (ownerId == null) {
-            throw new ValidationException("При поиске вещей пользователя не указан идентификатор владельца");
-        }
-        // что бы избежать проблемы N+1 запросов
-        // выгружаем сначала список всех вещей (один запрос)
+        idIsNullCheck(ownerId,"Идентификатор владельца вещи");
         Map<Long, Item> itemMap = itemRepository.findByOwnerId(ownerId)
                 .stream()
                 .collect(Collectors.toMap(Item::getId, Function.identity()));
-        // выгружаем комментарии (ещё один запрос)
         Map<Long, List<Comment>> commentMap = commentRepository.findByItemIdIn(itemMap.keySet()).stream()
                 .collect(Collectors.groupingBy(comment -> comment.getItem().getId()));
-
         return itemMap.values()
                 .stream()
                 .map(item -> makeItemWithCommentsDto(item,
@@ -151,30 +133,37 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public CommentsDTO addCommentToItem(Long itemId, CommentsDTO commentsDTO, Long authorId) {
-        if (authorId == null) {
-            throw new ValidationException("Идентификатор автора должен быть заполнен!");
-        }
+        idIsNullCheck(authorId,"Идентификатор автора");
         User user = userRepository.findById(authorId)
                 .orElseThrow(() -> new NotFoundException("Автор с id " + authorId + " не найден "));
-        if (itemId == null) {
-            throw new ValidationException("Идентификатор вещи должен быть заполнен!");
-        }
+        idIsNullCheck(itemId,"Идентификатор вещи");
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена"));
-        if (!item.getAvailable()) {
-            throw new ValidationException("Вещь не доступна для бронирования!");
-        }
-        //получаем список завершенных бронирований текущего пользователя
+        itemAvailableCheck(item);
+        checkUserBookings(authorId);
+        Comment comment = CommentMap.toComment(commentsDTO,item,user);
+        return CommentMap.toCommentsDTO(commentRepository.save(comment));
+    }
+
+    private void checkUserBookings(Long authorId) {
         List<Booking> bookings = bookingRepository.findAllByUserIdAndState(authorId, StatusEnum.APPROVED.name(),
                 StateEnum.PAST.name(), LocalDateTime.now());
         log.trace("bookings.size={}",bookings.size());
-        // если список пустой, то либо автор не бронил эту вещь, либо бронь не завершена
         if (bookings.isEmpty()) {
             throw new ValidationException("Отзыв может оставить только тот пользователь, " +
                     "который брал эту вещь в аренду, и только после окончания срока аренды!");
         }
-        Comment comment = CommentMap.toComment(commentsDTO,item,user);
-        CommentsDTO result = CommentMap.toCommentsDTO(commentRepository.save(comment));
-        return result;
+    }
+
+    private static void idIsNullCheck(Long id, String msgPrefix) {
+        if (id == null) {
+            throw new ValidationException(msgPrefix + " должен быть заполнен!");
+        }
+    }
+
+    private static void itemAvailableCheck(Item item) {
+        if (!item.getAvailable()) {
+            throw new ValidationException("Вещь не доступна для бронирования!");
+        }
     }
 }

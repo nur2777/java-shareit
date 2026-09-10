@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.shareit.constants.Constants.DATE_TIME_PATTERN;
+
 /**
  * DTO для запроса бронирования
  */
@@ -26,13 +28,13 @@ public class BookingRequestDTO {
      * Дата и время начала брони
      */
     @NotNull(message = "Дата и время начала брони не может быть пустой")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime start;
 
     /**
      * Дата и время окончания брони
      */
     @NotNull(message = "Дата и время окончания брони не может быть пустой")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime end;
 }

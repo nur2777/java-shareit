@@ -19,7 +19,6 @@ import ru.practicum.shareit.user.dao.UserRepository;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.practicum.shareit.booking.StateEnum.*;
@@ -36,36 +35,25 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponseDTO createNewBooking(BookingRequestDTO bookingDTO, Long renterId) {
-
-        if (renterId == null) {
-            throw new ValidationException("Идентификатор пользователя-арендатора должен быть заполнен!");
-        }
+        idIsNullCheck(renterId,"Идентификатор пользователя-арендатора");
         User user = userRepository.findById(renterId)
                 .orElseThrow(() -> new NotFoundException("Пользователь-арендатор с id " + renterId + " не найден "));
-        if (bookingDTO.getItemId() == null) {
-            throw new ValidationException("Идентификатор вещи должен быть заполнен!");
-        }
+        idIsNullCheck(bookingDTO.getItemId(),"Идентификатор вещи");
         Item item = itemRepository.findById(bookingDTO.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + bookingDTO.getItemId() + " не найдена"));
-        if (!item.getAvailable()) {
-            throw new ValidationException("Вещь не доступна для бронирования!");
-        }
+        itemAvailableCheck(item);
         Booking booking = BookingMap.toBooking(bookingDTO,item,user);
         booking.setStatus(StatusEnum.WAITING.name());
         return BookingMap.toBookingDTO(bookingRepository.save(booking));
     }
 
+
     @Override
     @Transactional
     public BookingResponseDTO confirmReject(Long bookingId, Long itemOwnerId, Boolean approved) {
-        if (bookingId == null) {
-            throw new ValidationException("Идентификатор бронирования bookingId должен быть заполнен!");
-        }
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Бронирование с id " + bookingId + " не найдено"));
-        if (itemOwnerId == null) {
-            throw new ValidationException("Идентификатор пользователя владельца вещи должен быть заполнен!");
-        }
+        idIsNullCheck(bookingId,"Идентификатор бронирования bookingId");
+        Booking booking = getBooking(bookingId);
+        idIsNullCheck(itemOwnerId,"Идентификатор пользователя владельца");
         if (!itemOwnerId.equals(booking.getItem().getOwnerId())) {
             throw new ValidationException("Подтверждение или отказ может быть выполнено только владельцем вещи!");
         }
@@ -76,30 +64,20 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDTO getBookingById(Long bookingId, Long userId) {
-        if (bookingId == null) {
-            throw new ValidationException("Идентификатор бронирования bookingId должен быть заполнен!");
-        }
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new NotFoundException("Бронирование с id " + bookingId + " не найдено"));
-        if (userId == null) {
-            throw new ValidationException("Идентификатор пользователя делающего запрос должен быть заполнен!");
-        }
+        idIsNullCheck(bookingId,"Идентификатор бронирования bookingId");
+        Booking booking = getBooking(bookingId);
+        idIsNullCheck(userId,"Идентификатор пользователя делающего запрос");
         if (!userId.equals(booking.getItem().getOwnerId()) && !userId.equals(booking.getUser().getId())) {
             throw new ValidationException(" Запрос может быть выполнено только владельцем вещи или автором бронирования!");
         }
         return BookingMap.toBookingDTO(booking);
     }
 
-
     @Override
     @Transactional
     public List<BookingResponseDTO> getAllBookingByUserId(Long currentUserId, StateEnum state) {
-        if (state == null) {
-            throw new ValidationException("Параметр статуса бронирования должен быть заполнен!");
-        }
-        if (currentUserId == null) {
-            throw new ValidationException("Идентификатор пользователя делающего запрос должен быть заполнен!");
-        }
+        stateIsNullCheck(state);
+        idIsNullCheck(currentUserId,"Идентификатор пользователя делающего запрос");
         List<Booking> bookings = switch (state) {
             case ALL -> bookingRepository.findAllByUserId(currentUserId);
             case PAST -> bookingRepository.findAllByUserIdAndState(currentUserId,StatusEnum.APPROVED.name(),PAST.name(), LocalDateTime.now());
@@ -107,13 +85,34 @@ public class BookingServiceImpl implements BookingService {
             case FUTURE -> bookingRepository.findAllByUserIdAndState(currentUserId,StatusEnum.APPROVED.name(),FUTURE.name(), LocalDateTime.now());
             case WAITING -> bookingRepository.findAllByUserIdAndState(currentUserId,StatusEnum.WAITING.name(),WAITING.name(), LocalDateTime.now());
             case REJECTED -> bookingRepository.findAllByUserIdAndState(currentUserId,StatusEnum.REJECTED.name(),REJECTED.name(), LocalDateTime.now());
-            default -> new ArrayList<>();
         };
-        List<BookingResponseDTO> dto = bookings
+
+        return bookings
                 .stream()
                 .map(BookingMap::toBookingDTO)
                 .toList();
+    }
 
-        return dto;
+    private static void stateIsNullCheck(StateEnum state) {
+        if (state == null) {
+            throw new ValidationException("Параметр статуса бронирования должен быть заполнен!");
+        }
+    }
+
+    private static void idIsNullCheck(Long id, String msgPrefix) {
+        if (id == null) {
+            throw new ValidationException(msgPrefix + " должен быть заполнен!");
+        }
+    }
+
+    private static void itemAvailableCheck(Item item) {
+        if (!item.getAvailable()) {
+            throw new ValidationException("Вещь не доступна для бронирования!");
+        }
+    }
+
+    private Booking getBooking(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new NotFoundException("Бронирование с id " + bookingId + " не найдено"));
     }
 }

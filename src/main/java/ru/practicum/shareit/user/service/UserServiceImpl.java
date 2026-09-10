@@ -79,17 +79,15 @@ public class UserServiceImpl implements UserService {
     }
 
     /** Проверка на дубликат. Существования пользователя с таким же email
+     * проверку выполняем постранично, что бы не выполнять полный селект из БД
      * @param email - почта которую надо проверить
      * @return true - если пользователь с такой почтой уже есть, иначе false
      */
     private boolean emailIsDuplicate(String email) {
-        //проверку выполняем постранично, что бы не выполнять полный селект из БД
         Sort sortById = Sort.by(Sort.Direction.ASC, "id");
-        // первая страница размером 32 элемента
         Pageable page = PageRequest.of(0, PAGE_SIZE, sortById);
         do {
             Page<User> userPage = userRepository.findAll(page);
-            // результат запроса получаем с помощью метода getContent()
             List<User> sameUsers = userPage.getContent()
                     .stream()
                     .filter(user -> user.getEmail().equals(email))
@@ -99,8 +97,7 @@ public class UserServiceImpl implements UserService {
                 return true;
             }
             if (userPage.hasNext()) {
-                // если следующая страница существует, создаём её описание, чтобы запросить на следующей итерации цикла
-                page = PageRequest.of(userPage.getNumber() + 1, userPage.getSize(), userPage.getSort()); // или для простоты -- userPage.nextOrLastPageable()
+                page = PageRequest.of(userPage.getNumber() + 1, userPage.getSize(), userPage.getSort());
             } else {
                 page = null;
             }

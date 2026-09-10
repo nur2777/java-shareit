@@ -11,11 +11,12 @@ import ru.practicum.shareit.booking.service.BookingService;
 
 import java.util.List;
 
+import static ru.practicum.shareit.constants.Constants.SHARER_USER_ID;
+
 @RestController
 @Slf4j
 @RequestMapping(path = "/bookings")
 public class BookingControllerImpl implements BookingController {
-    public static final String SHARER_USER_ID = "X-Sharer-User-Id";
     private final BookingService bookingService;
 
     @Autowired
@@ -49,7 +50,7 @@ public class BookingControllerImpl implements BookingController {
     @GetMapping
     public List<BookingResponseDTO> getAllBookingByUserId(@RequestHeader(SHARER_USER_ID) Long currentUserId,
                                                           @RequestParam(defaultValue = "ALL") String state) {
-        try { // проверяем корректность параметра state
+        try {
             StateEnum stateEnum = StateEnum.valueOf(state.toUpperCase());
             return bookingService.getAllBookingByUserId(currentUserId, stateEnum);
         } catch (IllegalArgumentException e) {

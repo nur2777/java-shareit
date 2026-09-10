@@ -6,6 +6,8 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+import static ru.practicum.shareit.constants.Constants.DATE_TIME_PATTERN;
+
 @Data
 public class CommentsDTO {
     /**
@@ -27,6 +29,6 @@ public class CommentsDTO {
     /**
      * Дата и время создания отзыва
      */
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime created;
 }

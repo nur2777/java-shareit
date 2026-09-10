@@ -10,12 +10,13 @@ import ru.practicum.shareit.item.service.ItemServiceImpl;
 
 import java.util.Collection;
 
+import static ru.practicum.shareit.constants.Constants.SHARER_USER_ID;
+
 @RestController
 @Slf4j
 @RequestMapping("/items")
 public class ItemControllerImpl implements ItemController {
 
-    public static final String SHARER_USER_ID = "X-Sharer-User-Id";
     private final ItemServiceImpl itemService;
 
     @Autowired

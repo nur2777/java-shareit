@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.practicum.shareit.constants.Constants.DATE_TIME_PATTERN;
+
 /**
  * DTO-объект для вещи
  */
@@ -44,11 +46,11 @@ public class ItemDTO {
     /**
      * Дата и время последнего бронирования
      */
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime lastBooking;
     /**
      * Дата и время ближайшего следующего бронирования
      */
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime nextBooking;
 }
