@@ -1,21 +1,27 @@
 package ru.practicum.shareit.item.model;
 
-import lombok.Builder;
-import lombok.Data;
+import jakarta.persistence.*;
+import lombok.*;
 
 /**
  * Модель данных вещи
  */
-@Data
-@Builder
+@Getter
+@Setter
+@Entity
+@NoArgsConstructor
+@Table(name = "items")
 public class Item {
     /**
      * Идентификатор вещи
      */
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     /**
      * Идентификатор владельца
      */
+    @Column(name = "owner_id", nullable = false)
     private Long ownerId;
     /**
      *  Короткое имя

@@ -1,15 +1,21 @@
 package ru.practicum.shareit.item.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static ru.practicum.shareit.constants.Constants.DATE_TIME_PATTERN;
 
 /**
  * DTO-объект для вещи
  */
 @Data
-@Builder
+@NoArgsConstructor
 public class ItemDTO {
     /**
      * Идентификатор вещи
@@ -33,4 +39,18 @@ public class ItemDTO {
      */
     @NotNull(message = "Статус доступности вещи должен быть указан")
     private Boolean available;
+    /**
+     * Комментарии к вещи
+     */
+    private List<CommentsDTO> comments;
+    /**
+     * Дата и время последнего бронирования
+     */
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
+    private LocalDateTime lastBooking;
+    /**
+     * Дата и время ближайшего следующего бронирования
+     */
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
+    private LocalDateTime nextBooking;
 }
