@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.service;
 
+import ru.practicum.shareit.item.dto.CommentsDTO;
 import ru.practicum.shareit.item.dto.ItemDTO;
 
 import java.util.Collection;
@@ -32,7 +33,7 @@ public interface ItemService {
      * @param itemId идентификатор вещи
      * @return данные найденной вещи
      */
-    ItemDTO getItem(Long itemId);
+    ItemDTO getItem(Long itemId, Long ownerId);
 
     /** Метод просмотра владельцем списка всех его вещей
      * @param ownerId идентификатор владельца
@@ -45,5 +46,14 @@ public interface ItemService {
      * @return список вещей
      */
     Collection<ItemDTO> findByNameDescription(String text);
+
+    /**
+     * Метод создания отзыва о вещи
+     * @param itemId идентификатор обновляемой вещи
+     * @param comment отзыв
+     * @param authorId владелец отзыва
+     * @return объект созданного отзыва
+     */
+    CommentsDTO addCommentToItem(Long itemId, CommentsDTO comment, Long authorId);
 
 }

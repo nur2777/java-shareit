@@ -1,18 +1,22 @@
 package ru.practicum.shareit.item.controller;
 
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.shareit.item.dto.CommentsDTO;
 import ru.practicum.shareit.item.dto.ItemDTO;
 import ru.practicum.shareit.item.service.ItemServiceImpl;
 
 import java.util.Collection;
 
+import static ru.practicum.shareit.constants.Constants.SHARER_USER_ID;
+
 @RestController
+@Slf4j
 @RequestMapping("/items")
 public class ItemControllerImpl implements ItemController {
 
-    public static final String SHARER_USER_ID = "X-Sharer-User-Id";
     private final ItemServiceImpl itemService;
 
     @Autowired
@@ -22,9 +26,9 @@ public class ItemControllerImpl implements ItemController {
 
     @Override
     @PostMapping
-    public ItemDTO add(@Valid @RequestBody ItemDTO newItem,
+    public ItemDTO add(@Valid @RequestBody ItemDTO itemDTO,
                        @RequestHeader(SHARER_USER_ID) Long ownerId) {
-        return itemService.createItem(newItem,ownerId);
+        return itemService.createItem(itemDTO,ownerId);
     }
 
     @Override
@@ -37,8 +41,9 @@ public class ItemControllerImpl implements ItemController {
 
     @Override
     @GetMapping("/{itemId}")
-    public ItemDTO getItem(@Valid @PathVariable Long itemId) {
-        return itemService.getItem(itemId);
+    public ItemDTO getItem(@Valid @PathVariable Long itemId,
+                           @RequestHeader(SHARER_USER_ID) Long ownerId) {
+        return itemService.getItem(itemId,ownerId);
     }
 
     @Override
@@ -50,7 +55,16 @@ public class ItemControllerImpl implements ItemController {
     @Override
     @GetMapping("/search")
     public Collection<ItemDTO> findByNameDescription(
-            @RequestParam String text) {
+            @RequestParam String text,
+            @RequestHeader(SHARER_USER_ID) Long ownerId) {
         return itemService.findByNameDescription(text);
+    }
+
+    @Override
+    @PostMapping("/{itemId}/comment")
+    public CommentsDTO addCommentToItem(@PathVariable Long itemId,
+                                    @Valid @RequestBody CommentsDTO commentsDTO,
+                                    @RequestHeader(SHARER_USER_ID) Long authorId) {
+        return itemService.addCommentToItem(itemId,commentsDTO,authorId);
     }
 }
