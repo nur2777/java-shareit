@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.common.ShareItUtils;
 import ru.practicum.shareit.booking.StateEnum;
 import ru.practicum.shareit.booking.dto.BookingResponseDTO;
 import ru.practicum.shareit.booking.dto.BookingRequestDTO;
@@ -35,13 +36,13 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponseDTO createNewBooking(BookingRequestDTO bookingDTO, Long renterId) {
-        idIsNullCheck(renterId,"Идентификатор пользователя-арендатора");
+        ShareItUtils.idIsNullCheck(renterId,"Идентификатор пользователя-арендатора");
         User user = userRepository.findById(renterId)
                 .orElseThrow(() -> new NotFoundException("Пользователь-арендатор с id " + renterId + " не найден "));
-        idIsNullCheck(bookingDTO.getItemId(),"Идентификатор вещи");
+        ShareItUtils.idIsNullCheck(bookingDTO.getItemId(),"Идентификатор вещи");
         Item item = itemRepository.findById(bookingDTO.getItemId())
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + bookingDTO.getItemId() + " не найдена"));
-        itemAvailableCheck(item);
+        ShareItUtils.itemAvailableCheck(item);
         Booking booking = BookingMap.toBooking(bookingDTO,item,user);
         booking.setStatus(StatusEnum.WAITING.name());
         return BookingMap.toBookingDTO(bookingRepository.save(booking));
@@ -51,9 +52,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingResponseDTO confirmReject(Long bookingId, Long itemOwnerId, Boolean approved) {
-        idIsNullCheck(bookingId,"Идентификатор бронирования bookingId");
+        ShareItUtils.idIsNullCheck(bookingId,"Идентификатор бронирования bookingId");
         Booking booking = getBooking(bookingId);
-        idIsNullCheck(itemOwnerId,"Идентификатор пользователя владельца");
+        ShareItUtils.idIsNullCheck(itemOwnerId,"Идентификатор пользователя владельца");
         if (!itemOwnerId.equals(booking.getItem().getOwnerId())) {
             throw new ValidationException("Подтверждение или отказ может быть выполнено только владельцем вещи!");
         }
@@ -64,9 +65,9 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDTO getBookingById(Long bookingId, Long userId) {
-        idIsNullCheck(bookingId,"Идентификатор бронирования bookingId");
+        ShareItUtils.idIsNullCheck(bookingId,"Идентификатор бронирования bookingId");
         Booking booking = getBooking(bookingId);
-        idIsNullCheck(userId,"Идентификатор пользователя делающего запрос");
+        ShareItUtils.idIsNullCheck(userId,"Идентификатор пользователя делающего запрос");
         if (!userId.equals(booking.getItem().getOwnerId()) && !userId.equals(booking.getUser().getId())) {
             throw new ValidationException(" Запрос может быть выполнено только владельцем вещи или автором бронирования!");
         }
@@ -77,7 +78,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public List<BookingResponseDTO> getAllBookingByUserId(Long currentUserId, StateEnum state) {
         stateIsNullCheck(state);
-        idIsNullCheck(currentUserId,"Идентификатор пользователя делающего запрос");
+        ShareItUtils.idIsNullCheck(currentUserId,"Идентификатор пользователя делающего запрос");
         List<Booking> bookings = switch (state) {
             case ALL -> bookingRepository.findAllByUserId(currentUserId);
             case PAST -> bookingRepository.findAllByUserIdAndState(currentUserId,StatusEnum.APPROVED.name(),PAST.name(), LocalDateTime.now());
@@ -96,18 +97,6 @@ public class BookingServiceImpl implements BookingService {
     private static void stateIsNullCheck(StateEnum state) {
         if (state == null) {
             throw new ValidationException("Параметр статуса бронирования должен быть заполнен!");
-        }
-    }
-
-    private static void idIsNullCheck(Long id, String msgPrefix) {
-        if (id == null) {
-            throw new ValidationException(msgPrefix + " должен быть заполнен!");
-        }
-    }
-
-    private static void itemAvailableCheck(Item item) {
-        if (!item.getAvailable()) {
-            throw new ValidationException("Вещь не доступна для бронирования!");
         }
     }
 

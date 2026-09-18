@@ -1,12 +1,16 @@
 package ru.practicum.shareit.request.controller;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.request.dto.ItemRequestDto;
 
 /**
- * TODO Sprint add-item-requests.
+ * Интерфейс для контроллера по работе c запросами о вещах
  */
-@RestController
-@RequestMapping(path = "/requests")
-public class ItemRequestController {
+public interface ItemRequestController {
+    /**
+     * Эндпоинт на создание нового запроса вещи
+     * @param newRequest данные нового запроса
+     * @param authorId автор запроса
+     * @return данные созданного запроса
+     */
+    ItemRequestDto addNewRequest(ItemRequestDto newRequest, Long authorId);
 }

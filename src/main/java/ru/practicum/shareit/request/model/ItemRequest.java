@@ -7,6 +7,8 @@ import lombok.Setter;
 import lombok.ToString;
 import ru.practicum.shareit.user.model.User;
 
+import java.time.LocalDateTime;
+
 
 /**
  * Модель данных для сущности запроса вещей
@@ -34,4 +36,9 @@ public class ItemRequest {
     @JoinColumn(name = "requestor_id")
     @ToString.Exclude
     private User user;
+    /**
+     * Дата и время создания запроса
+     */
+    @Column(name = "creation_date")
+    private LocalDateTime creationDate = LocalDateTime.now();
 }

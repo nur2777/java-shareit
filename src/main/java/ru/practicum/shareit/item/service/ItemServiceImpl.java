@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.common.ShareItUtils;
 import ru.practicum.shareit.booking.StateEnum;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.StatusEnum;
@@ -39,7 +40,7 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDTO createItem(ItemDTO itemDTO, Long ownerId) {
-        idIsNullCheck(ownerId,"Идентификатор владельца");
+        ShareItUtils.idIsNullCheck(ownerId,"Идентификатор владельца");
         User user = userRepository.findById(ownerId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + ownerId + " не найден "));
         Item item = ItemMap.itemDTOToItem(itemDTO);
@@ -50,10 +51,10 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public ItemDTO updateItem(Long itemId, ItemDTO itemDTO,  Long ownerId) {
-        idIsNullCheck(itemId,"Идентификатор владельца вещи");
+        ShareItUtils.idIsNullCheck(itemId,"Идентификатор владельца вещи");
         User user = userRepository.findById(ownerId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с id " + ownerId + " не найден "));
-        idIsNullCheck(itemId,"Идентификатор вещи");
+        ShareItUtils.idIsNullCheck(itemId,"Идентификатор вещи");
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена!"));
         if (!Objects.equals(ownerId,item.getOwnerId())) {
@@ -74,13 +75,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public void deleteItem(Long itemId) {
-        idIsNullCheck(itemId,"Идентификатор вещи");
+        ShareItUtils.idIsNullCheck(itemId,"Идентификатор вещи");
         itemRepository.deleteById(itemId);
     }
 
     @Override
     public ItemDTO getItem(Long itemId, Long ownerId) {
-        idIsNullCheck(itemId,"Идентификатор вещи");
+        ShareItUtils.idIsNullCheck(itemId,"Идентификатор вещи");
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена!"));
         ItemDTO itemDTO = ItemMap.itemToItemDTO(item);
@@ -99,7 +100,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDTO> getAllOwnerItems(Long ownerId) {
-        idIsNullCheck(ownerId,"Идентификатор владельца вещи");
+        ShareItUtils.idIsNullCheck(ownerId,"Идентификатор владельца вещи");
         Map<Long, Item> itemMap = itemRepository.findByOwnerId(ownerId)
                 .stream()
                 .collect(Collectors.toMap(Item::getId, Function.identity()));
@@ -133,13 +134,13 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public CommentsDTO addCommentToItem(Long itemId, CommentsDTO commentsDTO, Long authorId) {
-        idIsNullCheck(authorId,"Идентификатор автора");
+        ShareItUtils.idIsNullCheck(authorId,"Идентификатор автора");
         User user = userRepository.findById(authorId)
                 .orElseThrow(() -> new NotFoundException("Автор с id " + authorId + " не найден "));
-        idIsNullCheck(itemId,"Идентификатор вещи");
+        ShareItUtils.idIsNullCheck(itemId,"Идентификатор вещи");
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Вещь с id " + itemId + " не найдена"));
-        itemAvailableCheck(item);
+        ShareItUtils.itemAvailableCheck(item);
         checkUserBookings(authorId);
         Comment comment = CommentMap.toComment(commentsDTO,item,user);
         return CommentMap.toCommentsDTO(commentRepository.save(comment));
@@ -152,18 +153,6 @@ public class ItemServiceImpl implements ItemService {
         if (bookings.isEmpty()) {
             throw new ValidationException("Отзыв может оставить только тот пользователь, " +
                     "который брал эту вещь в аренду, и только после окончания срока аренды!");
-        }
-    }
-
-    private static void idIsNullCheck(Long id, String msgPrefix) {
-        if (id == null) {
-            throw new ValidationException(msgPrefix + " должен быть заполнен!");
-        }
-    }
-
-    private static void itemAvailableCheck(Item item) {
-        if (!item.getAvailable()) {
-            throw new ValidationException("Вещь не доступна для бронирования!");
         }
     }
 }
