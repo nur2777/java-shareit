@@ -16,6 +16,9 @@ public class ItemMap {
         if (itemDTO.getAvailable() != null) {
             item.setAvailable(itemDTO.getAvailable());
         }
+        if (itemDTO.getRequestId() != null) {
+            item.setRequestId(itemDTO.getRequestId());
+        }
         return item;
     }
 
@@ -25,6 +28,7 @@ public class ItemMap {
         itemDTO.setName(item.getName());
         itemDTO.setDescription(item.getDescription());
         itemDTO.setAvailable(item.getAvailable());
+        itemDTO.setRequestId(item.getRequestId());
         return itemDTO;
     }
 }

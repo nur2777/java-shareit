@@ -17,4 +17,6 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
             "        upper(it.name) like upper(?1) " +
             "        or upper(it.description) like upper(?2)  )")
     List<Item> findByNameDescription(String name, String description);
+
+    List<Item> findAllByRequestIdIn(List<Long> requestIds);
 }

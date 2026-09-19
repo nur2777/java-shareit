@@ -36,4 +36,9 @@ public class Item {
      * True - доступна, False - не доступна
      */
     private Boolean available;
+    /**
+     * Идентификатор запроса на добавление вещи
+     */
+    @Column(name = "request_id")
+    private Long requestId;
 }

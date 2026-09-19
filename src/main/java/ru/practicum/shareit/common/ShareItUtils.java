@@ -7,7 +7,9 @@ import ru.practicum.shareit.item.model.Item;
  * Класс для вспомогательных методов
  */
 public final class ShareItUtils {
-    private ShareItUtils() {}
+    private ShareItUtils() {
+
+    }
 
     /** Метод проверки идентификатора на null
      * @param id идентификатор

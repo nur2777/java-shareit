@@ -28,6 +28,7 @@ public class ItemRequest {
     /**
      * Описание запроса
      */
+    @Column(name = "description")
     private String description;
     /**
      * Пользователь создавший запрос вещи

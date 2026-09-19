@@ -53,4 +53,8 @@ public class ItemDTO {
      */
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime nextBooking;
+    /**
+     * Идентификатор запроса на добавление вещи
+     */
+    private Long requestId;
 }
