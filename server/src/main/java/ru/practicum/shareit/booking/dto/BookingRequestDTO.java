@@ -21,20 +21,17 @@ public class BookingRequestDTO {
     /**
      * Идентификатор бронируемой вещи
      */
-    @NotNull(message = "Идентификатор бронируемой вещи не может быть пустым")
     private Long itemId;
 
     /**
      * Дата и время начала брони
      */
-    @NotNull(message = "Дата и время начала брони не может быть пустой")
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime start;
 
     /**
      * Дата и время окончания брони
      */
-    @NotNull(message = "Дата и время окончания брони не может быть пустой")
     @JsonFormat(pattern = DATE_TIME_PATTERN)
     private LocalDateTime end;
 }

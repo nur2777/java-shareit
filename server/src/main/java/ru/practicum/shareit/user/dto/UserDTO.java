@@ -20,14 +20,9 @@ public class UserDTO {
     /**
      * Имя пользователя
      */
-    @NotNull(message = "Имя пользователя должно быть указано")
-    @NotBlank(message = "Имя пользователя не может быть пустым")
     private String name;
     /**
      * Электронная почта пользователя
      */
-    @NotNull(message = "Эл. почта пользователя должна быть указана")
-    @NotBlank(message = "Эл. почта пользователя не может быть пустой")
-    @Email(message = "Электронная почта должна содержать символ @")
     private String email;
 }

@@ -24,20 +24,15 @@ public class ItemDTO {
     /**
      *  Короткое имя
      */
-    @NotNull(message = "Имя вещи должно быть указано")
-    @NotBlank(message = "Имя вещи не может быть пустым")
     private String name;
     /**
      * Описание
      */
-    @NotNull(message = "Описание вещи должно быть указано")
-    @NotBlank(message = "Описание вещи не может быть пустым")
     private String description;
     /**
      * Доступность вещи
      * True - доступна, False - не доступна
      */
-    @NotNull(message = "Статус доступности вещи должен быть указан")
     private Boolean available;
     /**
      * Комментарии к вещи

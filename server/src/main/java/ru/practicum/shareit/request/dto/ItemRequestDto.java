@@ -24,8 +24,6 @@ public class ItemRequestDto {
     /**
      *  Описание запроса
      */
-    @NotNull(message = "Описание должно быть указано")
-    @NotBlank(message = "Описание не может быть пустым")
     private String description;
     /**
      * Дата и время создания запроса
