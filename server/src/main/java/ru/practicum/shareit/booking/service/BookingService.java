@@ -40,4 +40,13 @@ public interface BookingService {
      * @return список объектов бронирования текущего пользователя
      */
     List<BookingResponseDTO> getAllBookingByUserId(Long currentUserId, StateEnum state);
+
+    /**
+     * Метод получения списка бронирований для всех вещей текущего пользователя.
+     *
+     * @param ownerId идентификатор текущего пользователя делающего запрос
+     * @param state статус бронирования
+     * @return список бронирований
+     */
+    List<BookingResponseDTO> getAllBookingByOwnerId(Long ownerId, StateEnum state);
 }

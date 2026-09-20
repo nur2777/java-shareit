@@ -51,4 +51,15 @@ public class BookingController {
             throw new IllegalArgumentException("Неверное значение параметра state: " + state.toUpperCase());
         }
     }
+
+    @GetMapping("/owner")
+    public ResponseEntity<Object> getAllBookingByOwnerId(@RequestHeader(SHARER_USER_ID) Long ownerId,
+                                                         @RequestParam(defaultValue = "ALL") String state) {
+        try {
+            StateEnum stateEnum = StateEnum.valueOf(state.toUpperCase());
+            return bookingClient.getAllBookingByOwnerId(ownerId, stateEnum);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Неверное значение параметра state: " + state.toUpperCase());
+        }
+    }
 }

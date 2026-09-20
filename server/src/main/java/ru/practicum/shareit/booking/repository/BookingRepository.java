@@ -58,4 +58,30 @@ public interface BookingRepository extends JpaRepository<Booking,Long> {
             "                  and b.booking_start_datetime  > CURRENT_TIMESTAMP", nativeQuery = true)
     LocalDateTime findNextBookingDatetime(Long itemId);
 
+    /** Список бронирований для всех вещей текущего пользователя.
+     * @param ownerId текущий пользователь
+     * @return Список бронирований
+     */
+    List<Booking> findAllByItemOwnerId(Long ownerId);
+
+    /** Список бронирований текущего пользователя по заданным параметрам
+     * @param ownerId текущий пользователь
+     * @param status  статус бронирования
+     * @param bookingDateTime  дата и время бронирования
+     * @return Список бронирований
+     */
+    @Query("select b " +
+            "from Booking as b " +
+            "join b.item as i " +
+            "where i.ownerId = ?1 " +
+            "      and b.status = ?2 " +
+            "      and ( " +
+            "          (?3 = 'PAST' and b.bookingEnd < ?4) or " +
+            "          (?3 = 'CURRENT' and ?4 between b.bookingStart and b.bookingEnd) or " +
+            "          (?3 = 'FUTURE' and b.bookingStart > ?4) or " +
+            "          (?3 = 'WAITING')  or  (?3 = 'REJECTED') " +
+            "      ) " +
+            "order by b.bookingStart desc")
+    List<Booking> findAllByOwnerIdAndState(Long ownerId, String status, String state, LocalDateTime bookingDateTime);
+
 }

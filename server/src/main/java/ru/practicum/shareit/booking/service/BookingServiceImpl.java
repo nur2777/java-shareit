@@ -94,6 +94,29 @@ public class BookingServiceImpl implements BookingService {
                 .toList();
     }
 
+    @Override
+    public List<BookingResponseDTO> getAllBookingByOwnerId(Long ownerId, StateEnum state) {
+        stateIsNullCheck(state);
+        ShareItUtils.idIsNullCheck(ownerId,"Идентификатор пользователя делающего запрос");
+        List<Item> items = itemRepository.findByOwnerId(ownerId);
+        if (items == null || items.isEmpty()) {
+            throw new NotFoundException("У пользователя c id=" + ownerId + " нет вещей");
+        }
+        List<Booking> bookings = switch (state) {
+            case ALL -> bookingRepository.findAllByItemOwnerId(ownerId);
+            case PAST -> bookingRepository.findAllByOwnerIdAndState(ownerId,StatusEnum.APPROVED.name(),PAST.name(), LocalDateTime.now());
+            case CURRENT -> bookingRepository.findAllByOwnerIdAndState(ownerId,StatusEnum.APPROVED.name(),CURRENT.name(), LocalDateTime.now());
+            case FUTURE -> bookingRepository.findAllByOwnerIdAndState(ownerId,StatusEnum.APPROVED.name(),FUTURE.name(), LocalDateTime.now());
+            case WAITING -> bookingRepository.findAllByOwnerIdAndState(ownerId,StatusEnum.WAITING.name(),WAITING.name(), LocalDateTime.now());
+            case REJECTED -> bookingRepository.findAllByOwnerIdAndState(ownerId,StatusEnum.REJECTED.name(),REJECTED.name(), LocalDateTime.now());
+        };
+
+        return bookings
+                .stream()
+                .map(BookingMap::toBookingDTO)
+                .toList();
+    }
+
     private static void stateIsNullCheck(StateEnum state) {
         if (state == null) {
             throw new ValidationException("Параметр статуса бронирования должен быть заполнен!");

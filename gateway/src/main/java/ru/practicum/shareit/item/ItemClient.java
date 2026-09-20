@@ -11,9 +11,6 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.shareit.client.BaseClient;
 import ru.practicum.shareit.item.dto.CommentsDTO;
 import ru.practicum.shareit.item.dto.ItemDTO;
-import ru.practicum.shareit.user.dto.UserDTO;
-
-import java.util.Collection;
 import java.util.Map;
 
 @Service
@@ -36,11 +33,11 @@ public class ItemClient extends BaseClient {
     }
 
     public ResponseEntity<Object> updateItem(Long itemId, ItemDTO itemDTO,  Long ownerId) {
-        return patch("/"+itemId,ownerId,itemDTO);
+        return patch("/" + itemId,ownerId,itemDTO);
     }
 
     public ResponseEntity<Object> getItem(Long itemId, Long ownerId) {
-        return get("/"+itemId,ownerId);
+        return get("/" + itemId,ownerId);
     }
 
     public ResponseEntity<Object> getAllOwnerItems(Long ownerId) {
