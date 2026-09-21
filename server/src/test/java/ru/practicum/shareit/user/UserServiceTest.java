@@ -1,6 +1,5 @@
-package ru.practicum.shareit;
+package ru.practicum.shareit.user;
 
-import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.hamcrest.MatcherAssert;
@@ -44,6 +43,7 @@ public class UserServiceTest {
     private User user1;
     private User user2;
     private final UserService service;
+
     @BeforeEach
     void setUp() {
         user1 = new User();
