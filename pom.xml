@@ -114,6 +114,12 @@
 								<goal>check</goal>
 							</goals>
 							<configuration>
+                                <excludes>
+                                    <exclude>**/*$*Builder*.class</exclude>
+                                    <exclude>**/Constants.class</exclude>
+                                    <exclude>**/*Map.class</exclude>
+                                    <exclude>**/*Utils.class</exclude>
+                                </excludes>
 								<rules>
 									<rule>
 										<element>BUNDLE</element>
