@@ -116,7 +116,7 @@
 							<configuration>
                                 <excludes>
                                     <exclude>**/*$*Builder*.class</exclude>
-                                    <exclude>**/Constants.class</exclude>
+                                    <exclude>**/constants/**</exclude>
                                     <exclude>**/*Map.class</exclude>
                                     <exclude>**/*Utils.class</exclude>
                                 </excludes>

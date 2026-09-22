@@ -371,6 +371,16 @@ public class BookingServiceTest {
         assertThat(result).hasSize(1);
     }
 
+    @Test
+    void testBookingToString() {
+        Booking booking = new Booking();
+        booking.setId(1L);
+        booking.setStatus("WAITING");
+
+        assertThat(booking.toString()).contains("id=1");
+        assertThat(booking.toString()).contains("status=WAITING");
+    }
+
     private Booking createBooking(User user, Item item, LocalDateTime start, LocalDateTime end) {
         Booking booking = new Booking();
         booking.setUser(user);
