@@ -1,6 +1,5 @@
 package ru.practicum.shareit.booking.service;
 
-import ru.practicum.shareit.booking.StateEnum;
 import ru.practicum.shareit.booking.dto.BookingResponseDTO;
 import ru.practicum.shareit.booking.dto.BookingRequestDTO;
 
