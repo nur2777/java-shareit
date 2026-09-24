@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.booking.StateEnum;
 import ru.practicum.shareit.booking.dto.BookingResponseDTO;
 import ru.practicum.shareit.booking.dto.BookingRequestDTO;
 import ru.practicum.shareit.booking.service.BookingService;
@@ -50,23 +49,13 @@ public class BookingControllerImpl implements BookingController {
     @GetMapping
     public List<BookingResponseDTO> getAllBookingByUserId(@RequestHeader(SHARER_USER_ID) Long currentUserId,
                                                           @RequestParam(defaultValue = "ALL") String state) {
-        try {
-            StateEnum stateEnum = StateEnum.valueOf(state.toUpperCase());
-            return bookingService.getAllBookingByUserId(currentUserId, stateEnum);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Неверное значение параметра state: " + state.toUpperCase());
-        }
+            return bookingService.getAllBookingByUserId(currentUserId, state);
     }
 
     @Override
     @GetMapping("/owner")
     public List<BookingResponseDTO> getAllBookingByOwnerId(@RequestHeader(SHARER_USER_ID) Long ownerId,
                                                            @RequestParam(defaultValue = "ALL") String state) {
-        try {
-            StateEnum stateEnum = StateEnum.valueOf(state.toUpperCase());
-            return bookingService.getAllBookingByOwnerId(ownerId, stateEnum);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Неверное значение параметра state: " + state.toUpperCase());
-        }
+            return bookingService.getAllBookingByOwnerId(ownerId, state);
     }
 }

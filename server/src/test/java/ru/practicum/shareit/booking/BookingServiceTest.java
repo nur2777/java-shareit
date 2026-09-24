@@ -24,7 +24,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static ru.practicum.shareit.booking.StateEnum.*;
 
 @ActiveProfiles("test")
 @Transactional
@@ -206,7 +205,7 @@ public class BookingServiceTest {
         bookingRepository.save(createBooking(booker, item,
                 LocalDateTime.now().minusDays(5), LocalDateTime.now().minusDays(3)));
 
-        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), ALL);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), "ALL");
 
         assertThat(result).hasSize(1);
         assertThat(result.get(0).getId()).isNotNull();
@@ -223,7 +222,7 @@ public class BookingServiceTest {
         bookingRepository.save(createBooking(booker, item,
                 LocalDateTime.now().minusDays(5), LocalDateTime.now().minusDays(3)));
 
-        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), ALL);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), "ALL");
 
         assertThat(result).hasSize(1);
     }
@@ -237,7 +236,7 @@ public class BookingServiceTest {
 
         final Long emptyOwnerId = userWithoutItems.getId();
         assertThrows(NotFoundException.class,
-                () -> bookingService.getAllBookingByOwnerId(emptyOwnerId, ALL));
+                () -> bookingService.getAllBookingByOwnerId(emptyOwnerId, "ALL"));
     }
 
     @Test
@@ -257,7 +256,7 @@ public class BookingServiceTest {
         past.setStatus(StatusEnum.APPROVED.name());
         bookingRepository.save(past);
 
-        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), PAST);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), "PAST");
 
         assertThat(result).hasSize(1);
     }
@@ -271,7 +270,7 @@ public class BookingServiceTest {
         current.setStatus(StatusEnum.APPROVED.name());
         bookingRepository.save(current);
 
-        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), CURRENT);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), "CURRENT");
 
         assertThat(result).hasSize(1);
     }
@@ -285,7 +284,7 @@ public class BookingServiceTest {
         future.setStatus(StatusEnum.APPROVED.name());
         bookingRepository.save(future);
 
-        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), FUTURE);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), "FUTURE");
 
         assertThat(result).hasSize(1);
     }
@@ -298,7 +297,7 @@ public class BookingServiceTest {
         waiting.setStatus(StatusEnum.WAITING.name());
         bookingRepository.save(waiting);
 
-        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), WAITING);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), "WAITING");
 
         assertThat(result).hasSize(1);
     }
@@ -311,7 +310,7 @@ public class BookingServiceTest {
         rejected.setStatus(StatusEnum.REJECTED.name());
         bookingRepository.save(rejected);
 
-        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), REJECTED);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByUserId(booker.getId(), "REJECTED");
 
         assertThat(result).hasSize(1);
     }
@@ -323,7 +322,7 @@ public class BookingServiceTest {
                 LocalDateTime.now().minusDays(3));
         past.setStatus(StatusEnum.APPROVED.name());
         bookingRepository.save(past);
-        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), PAST);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), "PAST");
         assertThat(result).hasSize(1);
     }
 
@@ -334,7 +333,7 @@ public class BookingServiceTest {
                 LocalDateTime.now().plusDays(1));
         current.setStatus(StatusEnum.APPROVED.name());
         bookingRepository.save(current);
-        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), CURRENT);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), "CURRENT");
         assertThat(result).hasSize(1);
     }
 
@@ -345,7 +344,7 @@ public class BookingServiceTest {
                 LocalDateTime.now().plusDays(3));
         future.setStatus(StatusEnum.APPROVED.name());
         bookingRepository.save(future);
-        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), FUTURE);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), "FUTURE");
         assertThat(result).hasSize(1);
     }
 
@@ -356,7 +355,7 @@ public class BookingServiceTest {
                 LocalDateTime.now().plusDays(3));
         waiting.setStatus(StatusEnum.WAITING.name());
         bookingRepository.save(waiting);
-        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), WAITING);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), "WAITING");
         assertThat(result).hasSize(1);
     }
 
@@ -367,7 +366,7 @@ public class BookingServiceTest {
                 LocalDateTime.now().plusDays(3));
         rejected.setStatus(StatusEnum.REJECTED.name());
         bookingRepository.save(rejected);
-        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), REJECTED);
+        List<BookingResponseDTO> result = bookingService.getAllBookingByOwnerId(owner.getId(), "REJECTED");
         assertThat(result).hasSize(1);
     }
 

@@ -135,7 +135,7 @@ public class BookingControllerTest {
 
     @Test
     void testGetAllBookingByUserId_whenAll() throws Exception {
-        Mockito.when(bookingService.getAllBookingByUserId(100L, StateEnum.ALL))
+        Mockito.when(bookingService.getAllBookingByUserId(100L, "ALL"))
                 .thenReturn(List.of(responseDTO));
 
         mvc.perform(get("/bookings")
@@ -149,7 +149,7 @@ public class BookingControllerTest {
 
     @Test
     void testGetAllBookingByUserId_whenDefaultState() throws Exception {
-        Mockito.when(bookingService.getAllBookingByUserId(100L, StateEnum.ALL))
+        Mockito.when(bookingService.getAllBookingByUserId(100L, "ALL"))
                 .thenReturn(List.of(responseDTO));
 
         mvc.perform(get("/bookings")
@@ -160,19 +160,19 @@ public class BookingControllerTest {
 
     @Test
     void testGetAllBookingByUserId_whenLowerCaseState() throws Exception {
-        Mockito.when(bookingService.getAllBookingByUserId(100L, StateEnum.WAITING))
+        Mockito.when(bookingService.getAllBookingByUserId(100L, "WAITING"))
                 .thenReturn(List.of(responseDTO));
 
         mvc.perform(get("/bookings")
                         .header(SHARER_USER_ID, 100L)
-                        .param("state", "waiting"))
+                        .param("state", "WAITING"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
     }
 
     @Test
     void testGetAllBookingByOwnerId_whenAll() throws Exception {
-        Mockito.when(bookingService.getAllBookingByOwnerId(100L, StateEnum.ALL))
+        Mockito.when(bookingService.getAllBookingByOwnerId(100L, "ALL"))
                 .thenReturn(List.of(responseDTO));
 
         mvc.perform(get("/bookings/owner")
@@ -185,7 +185,7 @@ public class BookingControllerTest {
 
     @Test
     void testGetAllBookingByOwnerId_whenDefaultState() throws Exception {
-        Mockito.when(bookingService.getAllBookingByOwnerId(100L, StateEnum.ALL))
+        Mockito.when(bookingService.getAllBookingByOwnerId(100L, "ALL"))
                 .thenReturn(List.of(responseDTO));
 
         mvc.perform(get("/bookings/owner")

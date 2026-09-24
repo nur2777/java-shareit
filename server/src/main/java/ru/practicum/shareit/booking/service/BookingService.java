@@ -39,7 +39,7 @@ public interface BookingService {
      * @param state статус бронирования
      * @return список объектов бронирования текущего пользователя
      */
-    List<BookingResponseDTO> getAllBookingByUserId(Long currentUserId, StateEnum state);
+    List<BookingResponseDTO> getAllBookingByUserId(Long currentUserId, String state);
 
     /**
      * Метод получения списка бронирований для всех вещей текущего пользователя.
@@ -48,5 +48,5 @@ public interface BookingService {
      * @param state статус бронирования
      * @return список бронирований
      */
-    List<BookingResponseDTO> getAllBookingByOwnerId(Long ownerId, StateEnum state);
+    List<BookingResponseDTO> getAllBookingByOwnerId(Long ownerId, String state);
 }

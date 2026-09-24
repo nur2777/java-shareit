@@ -6,7 +6,7 @@ import ru.practicum.shareit.item.dto.ItemDTO;
 import java.util.Collection;
 
 /**
- * Интерфейс для контроллера по работе с пользователями
+ * Интерфейс для контроллера по работе с вещами
  */
 public interface ItemController {
     /**
@@ -29,6 +29,7 @@ public interface ItemController {
     /**
      * Эндпоинт получения конкретной вещи
      * @param id идентификатор вещи
+     * @param ownerId идентификатор владельца
      * @return объект
      */
     ItemDTO getItem(Long id,Long ownerId);

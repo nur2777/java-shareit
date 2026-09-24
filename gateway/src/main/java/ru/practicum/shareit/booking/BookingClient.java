@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import ru.practicum.shareit.booking.dto.BookingRequestDTO;
-import ru.practicum.shareit.booking.dto.StateEnum;
 import ru.practicum.shareit.client.BaseClient;
 
 @Service
@@ -43,12 +42,12 @@ public class BookingClient extends BaseClient {
         return get("/" + bookingId, userId);
     }
 
-    public ResponseEntity<Object> getAllBookingByUserId(Long currentUserId, StateEnum state) {
+    public ResponseEntity<Object> getAllBookingByUserId(Long currentUserId, String state) {
         Map<String, Object> parameters = Map.of("state", state);
         return get("?state={state}", currentUserId,parameters);
     }
 
-    public ResponseEntity<Object> getAllBookingByOwnerId(Long ownerId, StateEnum state) {
+    public ResponseEntity<Object> getAllBookingByOwnerId(Long ownerId, String state) {
         Map<String, Object> parameters = Map.of("state", state);
         return get("/owner?state={state}", ownerId,parameters);
     }
